@@ -11,12 +11,12 @@ import RegisterPage from "./components/pages/RegisterPage";
 import ShopPage from "./components/pages/ShopPage";
 
 function App() {
-  const { isLogin } = useSelector((state) => state.logInReducer);
+  // const { isLoggedIn } = useSelector((state) => state.logInReducer);
   return (
     <Layout>
       <Routes>
         <Route path="/*" element={<HomePage />} />
-        <Route path="/login" element={!isLogin && <LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/shop" element={<ShopPage />} />

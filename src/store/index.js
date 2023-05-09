@@ -1,4 +1,9 @@
-import { legacy_createStore as createStore, combineReducers } from "redux";
+import {
+  legacy_createStore as createStore,
+  combineReducers,
+  applyMiddleware,
+} from "redux";
+import thunk from "redux-thunk";
 import cartReducer from "./cart-reducer";
 import productDetailReducer from "./product-detail-reducer";
 import logInReducer from "./login-reducer";
@@ -32,7 +37,8 @@ const store = createStore(
     logInReducer,
     navBarActiveReducer,
   }),
-  loadCartFromLocalStorage()
+  loadCartFromLocalStorage(),
+  applyMiddleware(thunk)
 );
 
 // listen for store change and use saveToLocalStore to save them to localStore

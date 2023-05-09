@@ -3,15 +3,18 @@ import classes from "./LoginPage.module.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import loginAPI from "../lib/api-login";
 
 const LoginPage = () => {
   const [validEmail, setValidEmail] = useState(true);
   const [validPass, setValidPass] = useState(true);
-  const dispatch = useDispatch();
-  const { userList } = useSelector((state) => state.logInReducer);
+  const { isLoggedIn, isExistedUser, isWrongPassword } = useSelector(
+    (state) => state.logInReducer
+  );
   const emailRef = useRef();
   const passRef = useRef();
   const validForm = validEmail && validPass;
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const signUpHandler = () => {
     navigate("/register");
@@ -20,6 +23,10 @@ const LoginPage = () => {
     dispatch({ type: "ACTIVE_LOGIN_PAGE" });
     emailRef.current.focus();
   }, [dispatch]);
+
+  if (isLoggedIn) {
+    navigate("/");
+  }
   // check empty
   const isEmpty = (inputValue) => {
     if (inputValue.trim() === "") {
@@ -28,30 +35,20 @@ const LoginPage = () => {
     return false;
   };
   // find user, will return user othewire undefined
-  const findUser = () => {
-    const user = userList.find((user) => user.email === emailRef.current.value);
-    return user;
-  };
+  // const findUser = () => {
+  //   const user = userList.find((user) => user.email === emailRef.current.value);
+  //   return user;
+  // };
   const signInHandler = (e) => {
     e.preventDefault();
-    const user = findUser();
 
-    // check existed user
-    if (validForm && !user) {
-      alert("User name is not found. Please re-enter or click sign up");
-      passRef.current.value = "";
-      return;
-    }
-    // check pass of user
-    if (validForm && user && !(user.pass === passRef.current.value)) {
-      alert("Wrong password. Please check again");
-      passRef.current.value = "";
-      return;
-    }
-    if (validForm && user && user.pass === passRef.current.value) {
-      dispatch({ type: "ON_LOGIN", payload: { email: user.email } });
-      navigate("/");
-      return;
+    if (validForm) {
+      dispatch(
+        loginAPI({
+          email: emailRef.current.value,
+          password: passRef.current.value,
+        })
+      );
     }
   };
   const handlingOnBlurEmail = (e) => {
@@ -62,7 +59,7 @@ const LoginPage = () => {
     setValidEmail(true);
   };
   const handlingOnBlurPass = (e) => {
-    if (isEmpty(e.target.value) || e.target.value.length < 8) {
+    if (isEmpty(e.target.value) || e.target.value.length < 6) {
       setValidPass(false);
       return;
     }
@@ -85,6 +82,11 @@ const LoginPage = () => {
               The email is invalid, please check again
             </div>
           )}
+          {!isExistedUser && (
+            <div className={classes["error-massage"]}>
+              The user is not existed, try again or sign up now!
+            </div>
+          )}
           <input
             type="password"
             placeholder="Password"
@@ -95,6 +97,11 @@ const LoginPage = () => {
           {!validPass && (
             <div className={classes["error-massage"]}>
               The password is not empty and at least 8 character.
+            </div>
+          )}
+          {isWrongPassword && (
+            <div className={classes["error-massage"]}>
+              The password is wrong, try again.
             </div>
           )}
           <button className={!validForm ? classes["invalid-form"] : ""}>

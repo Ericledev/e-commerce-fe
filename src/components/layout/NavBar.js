@@ -9,15 +9,14 @@ const NavBar = () => {
   const { homePage, shopPage, cartPage, loginPage } = useSelector(
     (state) => state.navBarActiveReducer
   );
-  const { isLogin, userList } = useSelector((state) => state.logInReducer);
+  const { isLoggedIn, user } = useSelector((state) => state.logInReducer);
   const [active, setActive] = useState();
   useEffect(() => {
     return () => {
       setActive(null);
     };
   });
-  // find user active
-  const userActive = userList.find((user) => user.active === true);
+
   // handle onClick and navigate to page
   const onClickHandler = (e) => {
     //get name attribute
@@ -38,7 +37,7 @@ const NavBar = () => {
         break;
       case "logout":
         dispatch({ type: "ON_LOGOUT" });
-        navigate("/login");
+        navigate("/");
         break;
       default:
         navigate("/");
@@ -91,7 +90,7 @@ const NavBar = () => {
             Cart
           </div>
         </li>
-        {!isLogin && (
+        {!isLoggedIn && (
           <li
             className={active === "login" || loginPage ? classes.active : null}
           >
@@ -111,7 +110,7 @@ const NavBar = () => {
             </div>
           </li>
         )}
-        {isLogin && (
+        {isLoggedIn && (
           <li>
             <svg
               className={classes["login-icon"]}
@@ -121,7 +120,7 @@ const NavBar = () => {
               <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
             </svg>
             <div onClick={onClickHandler}>
-              {userActive.name}
+              {user.fullName}
               <svg
                 className={classes["login-icon-arrow-down"]}
                 xmlns="http://www.w3.org/2000/svg"
