@@ -11,11 +11,11 @@ const ProductsListShop = (props) => {
     // format VND
     const price = new Intl.NumberFormat("vi").format(Number(item.price));
     return (
-      <div className={classes.item} key={item._id.$oid}>
+      <div className={classes.item} key={item._id}>
         <img
-          src={item.img1}
+          src={item.images[0]}
           alt={item.category}
-          data-id={item._id.$oid}
+          data-id={item._id}
           onClick={productDetailHandler}
         />
         <div className={classes.name}>{item.name}</div>

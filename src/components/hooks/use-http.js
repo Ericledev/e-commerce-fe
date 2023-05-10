@@ -22,15 +22,18 @@ const reducerHTTP = (state, action) => {
       error: action.errorMessage,
     };
   }
+  if (action.type === "SET_INITIAL") {
+    return { data: null, status: null, error: null };
+  }
   return state;
 };
-
-const useHTTP = (requestFunction, startWithPending = false) => {
-  const [httpState, dispatch] = useReducer(reducerHTTP, {
-    data: null,
-    status: startWithPending ? "PENDING" : null,
-    error: null,
-  });
+const initial = {
+  data: null,
+  status: null,
+  error: null,
+};
+const useHTTP = (requestFunction) => {
+  const [httpState, dispatch] = useReducer(reducerHTTP, initial);
 
   const sendRequest = useCallback(
     async (reqData) => {
@@ -44,8 +47,10 @@ const useHTTP = (requestFunction, startWithPending = false) => {
     },
     [requestFunction]
   );
-
-  return { sendRequest, ...httpState };
+  const setData = () => {
+    dispatch({ type: "SET_INITIAL" });
+  };
+  return { setData, sendRequest, ...httpState };
 };
 
 export default useHTTP;

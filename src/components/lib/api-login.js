@@ -1,4 +1,4 @@
-const loginAPI = (user) => {
+export const loginAPI = (user) => {
   return async (dispatch) => {
     // send request to Server
     const res = await fetch(process.env.REACT_APP_DOMAIN + "/user/login", {
@@ -26,4 +26,18 @@ const loginAPI = (user) => {
     }
   };
 };
-export default loginAPI;
+
+export const signupAPI = async (user) => {
+  const res = await fetch(process.env.REACT_APP_DOMAIN + "/user/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  });
+  const messageData = await res.json();
+  return {
+    status: res.status,
+    message: messageData.message,
+  };
+};

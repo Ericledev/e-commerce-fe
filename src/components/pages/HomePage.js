@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import PopupProductDetail from "../popup/popup-product-detail";
 
 const HomePage = () => {
-  const { data, error, status, sendRequest } = useHTTP(getProducts, true);
+  const { data, error, status, sendRequest } = useHTTP(getProducts);
 
   // get state "isShowPopup" from redux
   const isShowPopup = useSelector(
@@ -40,9 +40,10 @@ const HomePage = () => {
 
   // show detail of product by id
   const showDetailHandler = (id) => {
-    const productDetail = data.filter((item) => item._id.$oid === id);
+    const productDetail = data.filter((item) => item._id === id);
+    // console.log("CHECK detai before dispatch: ", productDetail);
     // dipatch action to redux
-    dispatch({ type: "SHOW_POPUP", value: productDetail });
+    dispatch({ type: "SHOW_POPUP", value: productDetail[0] });
   };
 
   return (

@@ -5,9 +5,9 @@ import classes from "./product-detail.module.css";
 // import { saveToLocalStore } from "../../store/cart-reducer";
 
 const ProductDetail = (props) => {
-  const product = props.product[0];
+  const product = props.product;
   // console.log("CHECK PROPS produtt: ", product);
-  const [img, setImg] = useState("img1");
+  const [img, setImg] = useState(0);
 
   const quantityRef = useRef();
 
@@ -46,36 +46,40 @@ const ProductDetail = (props) => {
         {/* Image of product */}
         <div className={classes.image}>
           <div className={classes.large}>
-            <img className={classes.img1} src={product[img]} alt="" />
+            <img
+              className={classes.img1}
+              src={product.images[img]}
+              alt={product.name}
+            />
           </div>
           <div className={classes.small}>
             <img
               className={classes.img2}
-              src={product.img2}
+              src={product.images[0]}
               onClick={changeImageHandler}
-              data-img="img2"
-              alt=""
+              data-img="0"
+              alt={product.name}
             />
             <img
               className={classes.img3}
-              src={product.img3}
+              src={product.images[1]}
               onClick={changeImageHandler}
-              data-img="img3"
-              alt=""
+              data-img="1"
+              alt={product.name}
             />
             <img
               className={classes.img4}
-              src={product.img4}
+              src={product.images[2]}
               onClick={changeImageHandler}
-              data-img="img4"
-              alt=""
+              data-img="2"
+              alt={product.name}
             />
             <img
               className={classes.img5}
-              src={product.img1}
+              src={product.images[3]}
               onClick={changeImageHandler}
-              data-img="img1"
-              alt=""
+              data-img="3"
+              alt={product.name}
             />
           </div>
         </div>

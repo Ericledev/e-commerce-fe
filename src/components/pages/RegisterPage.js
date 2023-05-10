@@ -2,16 +2,16 @@ import classes from "./RegisterPage.module.css";
 import LayoutLoginForm from "../login/layout-login-form";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import useHTTP from "../hooks/use-http";
+import { signupAPI } from "../lib/api-login";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  let { data, sendRequest, setData } = useHTTP(signupAPI);
   const [validateName, setValidateName] = useState(true);
   const [validateEmail, setValidateEmail] = useState(true);
   const [validatePass, setValidatePass] = useState(true);
   const [validatePhone, setValidatePhone] = useState(true);
-  const dispatch = useDispatch();
-  const { userList } = useSelector((state) => state.logInReducer);
   const formIsValid =
     validateName && validateEmail && validatePass && validatePhone;
 
@@ -23,14 +23,7 @@ const RegisterPage = () => {
   useEffect(() => {
     nameRef.current.focus();
   }, []);
-  // Check user existed
-  const isExistedUser = () => {
-    const index = userList.find(
-      (user) => user.email === emailRef.current.value
-    );
-    if (index) return true;
-    else return false;
-  };
+  // check empty input
   const isEmpty = (inputValue) => {
     if (inputValue.trim() === "") {
       return true;
@@ -48,37 +41,28 @@ const RegisterPage = () => {
     }
     return true;
   };
-  const refeshForm = () => {
-    nameRef.current.value = "";
-    emailRef.current.value = "";
-    passRef.current.value = "";
-    phoneRef.current.value = "";
-  };
+  if (data && data.status === 200) {
+    // alert("Sign up is succeed");
+    navigate("/login");
+  }
   const loginHandler = () => {
     navigate("/login");
   };
   const signUpHandler = (e) => {
     e.preventDefault();
-    const existedUser = isExistedUser();
-    if (formIsValid && existedUser) {
-      alert("Email is existed, please try another email!");
-      return;
-    }
+
     if (formIsValid) {
-      dispatch({
-        type: "ADD_NEW_USER",
-        payload: {
-          name: nameRef.current.value,
-          email: emailRef.current.value,
-          pass: passRef.current.value,
-          phone: phoneRef.current.value,
-          active: false,
-        },
+      sendRequest({
+        fullName: nameRef.current.value,
+        email: emailRef.current.value,
+        password: passRef.current.value,
+        phoneNumber: phoneRef.current.value,
       });
-      refeshForm();
     }
   };
+  // check valid input form
   const validateInput = (e) => {
+    setData();
     switch (e.target.name) {
       case "name":
         if (isEmpty(e.target.value)) {
@@ -102,7 +86,12 @@ const RegisterPage = () => {
         setValidatePass(true);
         break;
       case "phone":
-        if (isEmpty(e.target.value) || !isPhoneNumber(e.target.value)) {
+        if (
+          isEmpty(e.target.value) ||
+          !isPhoneNumber(e.target.value) ||
+          e.target.value.length < 8 ||
+          e.target.value.length > 12
+        ) {
           setValidatePhone(false);
           return;
         }
@@ -130,6 +119,9 @@ const RegisterPage = () => {
               The name is empty. Please enter name.
             </div>
           )}
+          {data && data.status === 424 && (
+            <div className={classes["error-massage"]}>{data.message}</div>
+          )}
           <input
             type="text"
             placeholder="Email"
@@ -142,6 +134,9 @@ const RegisterPage = () => {
             <div className={classes["error-massage"]}>
               The email is invalid, please check again
             </div>
+          )}
+          {data && (data.status === 420 || data.status === 421) && (
+            <div className={classes["error-massage"]}>{data.message}</div>
           )}
           <input
             type="password"
@@ -156,6 +151,9 @@ const RegisterPage = () => {
               The password is not empty and at least 8 character.
             </div>
           )}
+          {data && data.status === 422 && (
+            <div className={classes["error-massage"]}>{data.message}</div>
+          )}
           <input
             type="text"
             placeholder="Phone Number"
@@ -168,6 +166,9 @@ const RegisterPage = () => {
             <div className={classes["error-massage"]}>
               The phone number is invalid, please check again
             </div>
+          )}
+          {data && data.status === 423 && (
+            <div className={classes["error-massage"]}>{data.message}</div>
           )}
           <button>SIGN UP</button>
           <p>

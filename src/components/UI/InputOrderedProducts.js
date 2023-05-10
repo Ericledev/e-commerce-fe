@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useState } from "react";
 import classes from "./InputOrderedProducts.module.css";
+
 const InputOrderedProducts = forwardRef((props, ref) => {
   // const [count, setCount] = useState(props.quantity ? props.quantity : 1);
   const [count, setCount] = useState(props.quantity);

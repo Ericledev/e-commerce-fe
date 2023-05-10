@@ -19,6 +19,7 @@ const PopupProductDetail = () => {
       dispatch({ type: "HIDE_POPUP" });
     }, 300);
   };
+  console.log("CHECK PRODUCT DETAIL: ", productDetail);
   return (
     <div className={classes.background} onClick={onClickBackgroundHandler}>
       <Modal data={productDetail} onClick={closeHandler} ref={refModal} />

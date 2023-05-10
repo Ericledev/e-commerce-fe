@@ -3,7 +3,7 @@ import classes from "./LoginPage.module.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import loginAPI from "../lib/api-login";
+import { loginAPI } from "../lib/api-login";
 
 const LoginPage = () => {
   const [validEmail, setValidEmail] = useState(true);
@@ -34,11 +34,7 @@ const LoginPage = () => {
     }
     return false;
   };
-  // find user, will return user othewire undefined
-  // const findUser = () => {
-  //   const user = userList.find((user) => user.email === emailRef.current.value);
-  //   return user;
-  // };
+
   const signInHandler = (e) => {
     e.preventDefault();
 

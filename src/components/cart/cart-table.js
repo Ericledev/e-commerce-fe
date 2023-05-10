@@ -16,7 +16,7 @@ const CartTable = (props) => {
     if (window.confirm(`Do you want to delete product '${product.name}'?`)) {
       dispatch({
         type: "DELETE_CART",
-        value: { id: product._id.$oid, total: quantity * product.price },
+        value: { id: product._id, total: quantity * product.price },
       });
     }
   };
@@ -25,14 +25,14 @@ const CartTable = (props) => {
     const { product } = item;
     dispatch({
       type: "INCREASE_QUANTITY",
-      value: { id: product._id.$oid, price: product.price },
+      value: { id: product._id, price: product.price },
     });
   };
   const decreaseHandler = (item) => {
     const { product } = item;
     dispatch({
       type: "DECREASE_QUANTITY",
-      value: { id: product._id.$oid, price: product.price },
+      value: { id: product._id, price: product.price },
     });
   };
   // Handle onclick left footer
@@ -53,7 +53,7 @@ const CartTable = (props) => {
     return (
       <tr>
         <td>
-          <img src={item.product.img1} alt={item.product.name} />
+          <img src={item.product.images[0]} alt={item.product.name} />
         </td>
         <td className={classes.product}>{item.product.name}</td>
         <td className={classes.price}>

@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 const ShopPage = () => {
-  const { data, error, status, sendRequest } = useHTTP(getProducts, true);
+  const { data, error, status, sendRequest } = useHTTP(getProducts);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [isDidMount, setIsDidMount] = useState(true);
   const navigate = useNavigate();
@@ -54,12 +54,6 @@ const ShopPage = () => {
     alert("Waiting for dev");
   };
 
-  // const paginationData=()=>{
-  //   if(data){
-  //     return [...data]
-  //   }
-
-  // }
   return (
     <div className={classes["shop-container"]}>
       {/* Banner */}

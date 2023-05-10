@@ -5,7 +5,8 @@ import classes from "./Modal.module.css";
 const Modal = forwardRef((props, ref) => {
   const [amiClose, setAmiClose] = useState(false);
   const navigation = useNavigate();
-  const product = props.data[0];
+  const product = props.data;
+  // console.log("CHECK DATA: ", props.data);
 
   // parent component can call "closeModal()" in children component via ref
   useImperativeHandle(ref, () => {
@@ -44,7 +45,7 @@ const Modal = forwardRef((props, ref) => {
     <div className={addClass} onClick={stopPropagationHandler}>
       {/* Image of product */}
       <div className={classes.image}>
-        <img src={product.img1} alt={product.name} />
+        <img src={product.images[0]} alt={product.name} />
       </div>
       {/* Content of product */}
       <div className={classes.content}>

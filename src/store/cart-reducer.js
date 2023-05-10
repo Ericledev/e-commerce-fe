@@ -5,7 +5,7 @@ const initialStateCart = {
 
 const cartReducer = (state = initialStateCart, action) => {
   const { total, listCart } = state;
-  // console.log("CHECK listCart in cartReducer: ", listCart);
+  console.log("CHECK listCart in cartReducer: ", listCart);
   switch (action.type) {
     case "ADD_CART":
       // Check listCart is empty then add product to cart
@@ -17,11 +17,11 @@ const cartReducer = (state = initialStateCart, action) => {
       }
       // Check isExist
       let isExist = listCart.findIndex(
-        (item) => item.product._id.$oid === action.value.product._id.$oid
+        (item) => item.product._id === action.value.product._id
       );
       const updatedProducts = listCart.map((item) => {
         let newQuantity;
-        if (item.product._id.$oid === action.value.product._id.$oid) {
+        if (item.product._id === action.value.product._id) {
           newQuantity = +item.quantity + +action.value.quantity;
         } else {
           newQuantity = +item.quantity;
@@ -48,17 +48,15 @@ const cartReducer = (state = initialStateCart, action) => {
       break;
     case "DELETE_CART":
       const listCartAfterDelete = listCart.filter(
-        (item) => item.product._id.$oid !== action.value.id
+        (item) => item.product._id !== action.value.id
       );
-      console.log("CART DELETE: ", listCartAfterDelete);
-      console.log("CART Total DELETE: ", action.value.total);
       return {
         listCart: [...listCartAfterDelete],
         total: total - +action.value.total,
       };
     case "INCREASE_QUANTITY":
       const incrementListCart = listCart.map((item) => {
-        if (item.product._id.$oid === action.value.id) {
+        if (item.product._id === action.value.id) {
           item.quantity = item.quantity + 1;
         }
         return item;
@@ -69,7 +67,7 @@ const cartReducer = (state = initialStateCart, action) => {
       };
     case "DECREASE_QUANTITY":
       const decrementListCart = listCart.map((item) => {
-        if (item.product._id.$oid === action.value.id) {
+        if (item.product._id === action.value.id) {
           item.quantity = item.quantity - 1;
         }
         return item;
