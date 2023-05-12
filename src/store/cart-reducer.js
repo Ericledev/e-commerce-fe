@@ -5,7 +5,7 @@ const initialStateCart = {
 
 const cartReducer = (state = initialStateCart, action) => {
   const { total, listCart } = state;
-  console.log("CHECK listCart in cartReducer: ", listCart);
+  // console.log("CHECK listCart in cartReducer: ", listCart);
   switch (action.type) {
     case "ADD_CART":
       // Check listCart is empty then add product to cart

@@ -1,10 +1,11 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import InputOrderedProducts from "../UI/InputOrderedProducts";
 import classes from "./cart-table.module.css";
 
 const CartTable = (props) => {
+  const { isLoggedIn } = useSelector((state) => state.logInReducer);
   const dispatch = useDispatch();
   const { listCart } = props.cart;
   const navigate = useNavigate();
@@ -43,6 +44,10 @@ const CartTable = (props) => {
   const rightFooterHandler = () => {
     if (listCart.length === 0) {
       alert("Please go to shopping before check out");
+      return;
+    }
+    if (!isLoggedIn) {
+      alert("You have login first! thanks");
       return;
     }
     navigate("/checkout");

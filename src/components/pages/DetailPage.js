@@ -6,6 +6,8 @@ import ProductDetail from "../products/product-detail";
 import ProductsList from "../products/products-list";
 import classes from "./DetailPage.module.css";
 import { useNavigate } from "react-router-dom";
+import openSocket from "socket.io-client";
+
 const DetailPage = () => {
   const idProduct = useParams(); // return object {productId: parameter}
   const { data, error, status, sendRequest } = useHTTP(getProducts);
@@ -13,6 +15,9 @@ const DetailPage = () => {
   useEffect(() => {
     sendRequest(); //idProduct.productId
   }, [sendRequest]);
+  useEffect(() => {
+    openSocket(`${process.env.REACT_APP_DOMAIN}`);
+  }, []);
 
   // filter the detail of product by id
   let productDetail = [];

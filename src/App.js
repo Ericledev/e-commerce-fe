@@ -11,14 +11,14 @@ import RegisterPage from "./components/pages/RegisterPage";
 import ShopPage from "./components/pages/ShopPage";
 
 function App() {
-  // const { isLoggedIn } = useSelector((state) => state.logInReducer);
+  const { isLoggedIn } = useSelector((state) => state.logInReducer);
   return (
     <Layout>
       <Routes>
         <Route path="/*" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/checkout" element={isLoggedIn && <CheckoutPage />} />
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/detail/:productId" element={<DetailPage />} />
