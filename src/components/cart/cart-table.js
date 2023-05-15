@@ -54,9 +54,9 @@ const CartTable = (props) => {
   };
 
   // create data row inside table
-  const tableData = listCart.map((item) => {
+  const tableData = listCart.map((item, index) => {
     return (
-      <tr>
+      <tr key={index}>
         <td>
           <img src={item.product.images[0]} alt={item.product.name} />
         </td>

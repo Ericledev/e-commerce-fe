@@ -13,7 +13,7 @@ const CheckoutPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.logInReducer);
-  const { data, error, sendRequest } = useHTTP(addNewOrder);
+  const { data, sendRequest } = useHTTP(addNewOrder);
   // const dataString = "";
   const handleSubmitOrder = (user) => {
     // alert("am here");
@@ -25,7 +25,7 @@ const CheckoutPage = () => {
       dispatch({ type: "CLEAR_CART" });
       navigate("/shop");
     }
-  }, [data]);
+  }, [data, dispatch, navigate]);
   // console.log("CHECK DATA res: ", data);
 
   return (

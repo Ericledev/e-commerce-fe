@@ -9,6 +9,8 @@ import HomePage from "./components/pages/HomePage";
 import LoginPage from "./components/pages/LoginPage";
 import RegisterPage from "./components/pages/RegisterPage";
 import ShopPage from "./components/pages/ShopPage";
+import Order from "./components/pages/Order";
+import OrderDetail from "./components/pages/OrderDetail";
 
 function App() {
   const { isLoggedIn } = useSelector((state) => state.logInReducer);
@@ -19,6 +21,11 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/checkout" element={isLoggedIn && <CheckoutPage />} />
+        <Route path="/order" element={isLoggedIn && <Order />} />
+        <Route
+          path="/order/detail/:id"
+          element={isLoggedIn && <OrderDetail />}
+        />
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/detail/:productId" element={<DetailPage />} />

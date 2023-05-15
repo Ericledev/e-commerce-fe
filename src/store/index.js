@@ -5,6 +5,7 @@ import {
 } from "redux";
 import thunk from "redux-thunk";
 import cartReducer from "./cart-reducer";
+import orderReducer from "./order-reducer";
 import productDetailReducer from "./product-detail-reducer";
 import logInReducer from "./login-reducer";
 import navBarActiveReducer from "./nav-bar-active-reducer";
@@ -33,6 +34,7 @@ function loadCartFromLocalStorage() {
 const store = createStore(
   combineReducers({
     cartReducer,
+    orderReducer,
     productDetailReducer,
     logInReducer,
     navBarActiveReducer,

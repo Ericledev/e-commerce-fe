@@ -25,6 +25,10 @@ ul li div {
   width: 20px;
   fill: grey;
 }
+.list-icon {
+  width: 15px;
+  fill: grey;
+}
 .login-icon {
   width: 15px;
   fill: grey;
