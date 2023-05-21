@@ -1,5 +1,6 @@
-import setHearder from "./set_hearder_auth";
-export const orderAPI = (userId) => {
+import setHearder from "../pages/lib/set_hearder_auth";
+
+export const chatAPI = (userId) => {
   return async (dispatch) => {
     // send request to Server
     const res = await fetch(

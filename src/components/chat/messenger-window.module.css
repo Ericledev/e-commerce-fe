@@ -95,6 +95,7 @@
 .chat-footer svg {
   width: 20px;
   fill: grey;
+  cursor: pointer;
 }
 .paper-plane {
   fill: rgb(72, 176, 247) !important;

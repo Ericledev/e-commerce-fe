@@ -42,6 +42,14 @@ const loginReducer = (state = initialStateLogin, action) => {
         isExistedUser: true,
         isWrongPassword: true,
       };
+    case "INVALID_EMAIL":
+      return {
+        user: null,
+        isLoggedIn: false,
+        isExistedUser: false,
+        isWrongPassword: false,
+      };
+
     default:
       return state;
   }

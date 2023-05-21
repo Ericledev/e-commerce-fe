@@ -4,6 +4,7 @@ import classes from "./messenger.module.css";
 
 const Messenger = () => {
   const [chatToggle, setChatToggle] = useState(false);
+
   const chatToggleHandler = () => {
     setChatToggle((prvChatToggle) => !prvChatToggle);
   };

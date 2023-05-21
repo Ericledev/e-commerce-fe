@@ -19,6 +19,11 @@ export const loginAPI = (user) => {
       dispatch({ type: "WRONG_PASSWORD" });
       return;
     }
+    // 422 = wrong password
+    if (res.status === 422) {
+      dispatch({ type: "INVALID_EMAIL" });
+      return;
+    }
     // 200 = ok
     if (res.status === 200) {
       const data = await res.json();
