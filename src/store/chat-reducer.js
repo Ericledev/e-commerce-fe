@@ -1,14 +1,24 @@
 const initialStateChat = {
-  chatRoom: null,
+  chatRoomId: null,
+  conversation: null,
+  member: null,
 };
 
 const chatReducer = (state = initialStateChat, action) => {
   //   const { total, listCart } = state;
   //   console.log("CHECK listCart in action: ", action);
   switch (action.type) {
-    case "GET_ROOM":
+    case "ADD_ROOM":
       return {
-        chatRoom: { ...action.payload },
+        chatRoomId: action.payload.chatRoom._id,
+        member: action.payload.chatRoom.member,
+        conversation: action.payload.chatRoom.conversation,
+      };
+    case "ADD_MESSAGE":
+      return {
+        chatRoomId: state.chatRoomId,
+        member: state.member,
+        conversation: [...state.conversation, action.payload],
       };
     default:
       return state;

@@ -1,17 +1,79 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MessengerWindow from "./messenger-window";
 import classes from "./messenger.module.css";
+import openSocket from "socket.io-client";
+import { useDispatch, useSelector } from "react-redux";
+import { createChatRoomAPI } from "../lib/api-chat";
 
 const Messenger = () => {
   const [chatToggle, setChatToggle] = useState(false);
+  const [socket, setSocket] = useState(null);
+  const { chatRoomId } = useSelector((state) => state.chatReducer);
+  const [adminTyping, setAdminTyping] = useState();
+  const dispatch = useDispatch();
+  // componentDidMout - connect to server, create room
+  useEffect(() => {
+    // open socket
+    setSocket(openSocket(`${process.env.REACT_APP_DOMAIN}`));
+    if (!chatRoomId) {
+      dispatch(createChatRoomAPI());
+    }
+  }, []);
+  // componentDidUpdate - listen channel after get chatRoomId
+  useEffect(() => {
+    // open channel with name is _id of chat room
+    if (socket && chatRoomId) {
+      socket.on(chatRoomId, (data) => {
+        if (data.action === "reply") {
+          dispatch({
+            type: "ADD_MESSAGE",
+            payload: { user: "admin", message: data.message },
+          });
+        }
+        if (data.action === "START_TYPING") {
+          console.log("CHECK typing start: ", data);
+          setAdminTyping("Admin is typing ...");
+        } else {
+          console.log("CHECK typing stop: ", data);
+          setAdminTyping("");
+        }
+      });
+    }
+  }, [chatRoomId, socket]);
 
   const chatToggleHandler = () => {
     setChatToggle((prvChatToggle) => !prvChatToggle);
   };
-  //   console.log("CHAT TOGGLE: ", chatToggle);
+  // console.log("CHECK SOCKT: ", socket);
+  const typingHandler = (status) => {
+    // console.log("CHECK CHOOSE ROOM: ", chooseRoom);
+    if (status === "START") {
+      socket?.emit("TYPING", {
+        action: "START_TYPING",
+        roomId: chatRoomId,
+        userId: "client",
+      });
+      console.log("start type");
+      return;
+    }
+    if (status === "STOP") {
+      socket?.emit("TYPING", {
+        action: "STOP_TYPING",
+        roomId: chatRoomId,
+        userId: "client",
+      });
+      console.log("stop type");
+      return;
+    }
+  };
   return (
     <div className={classes["messenger-container"]}>
-      {chatToggle && <MessengerWindow />}
+      {chatToggle && (
+        <MessengerWindow
+          adminTyping={adminTyping}
+          onTypingHandler={typingHandler}
+        />
+      )}
       <div className={classes["messenger-icon"]}>
         <svg
           xmlns="http://www.w3.org/2000/svg"

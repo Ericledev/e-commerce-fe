@@ -1,21 +1,85 @@
 import classes from "./messenger-window.module.css";
 import admin_icon from "../../asset/admin-icon.svg";
-import openSocket from "socket.io-client";
-import { useEffect, useRef, useState } from "react";
-const MessengerWindow = () => {
-  const [channel, setChennal] = useState("public");
+import { addMessageAPI } from "../lib/api-chat";
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+const MessengerWindow = ({ adminTyping, onTypingHandler }) => {
+  // const [adminTyping, setAdminTyping] = useState();
+  const { conversation, chatRoomId } = useSelector(
+    (state) => state.chatReducer
+  );
+  const dispatch = useDispatch();
+
+  // const dispatch = useDispatch();
   const refMessage = useRef();
+  const refChatContent = useRef();
+  // move the bottom of chat window when chat
   useEffect(() => {
-    const socket = openSocket(`${process.env.REACT_APP_DOMAIN}`);
-    socket.on(channel, (data) => {
-      if (data.action === "reply") {
-        console.log("Receipt Message: ", data.message);
+    refChatContent.current.scrollTop = refChatContent.current.scrollHeight;
+  }, [conversation]);
+
+  let conversationList =
+    conversation &&
+    conversation.map((item, index) => {
+      if (item.user !== "client") {
+        return (
+          <div className={classes["chat-admin-container"]} key={index}>
+            <div className={classes["chat-line"]}>
+              <img
+                className={classes["admin-icon"]}
+                src={admin_icon}
+                alt="Admin icon"
+              />
+              <label className={classes["chat-admin"]}>
+                ADMIN: {item.message}
+              </label>
+            </div>
+          </div>
+        );
+      } else {
+        return (
+          <div className={classes["chat-customer-container"]} key={index}>
+            <div className={classes["chat-customer"]}>
+              <label>You: {item.message}</label>
+            </div>
+          </div>
+        );
       }
     });
-  }, [channel]);
+
   const sendMessageHandler = () => {
-    setChennal(refMessage.current.value);
+    // check empty input
+    if (refMessage.current.value.trim() === "") {
+      alert("Please enter message.");
+      refMessage.current.focus();
+      return;
+    }
+    // dispatch mesage to redux
+    dispatch({
+      type: "ADD_MESSAGE",
+      payload: {
+        user: "client",
+        message: refMessage.current.value,
+      },
+    });
+    // dispatch message to middleware
+    dispatch(
+      addMessageAPI({
+        user: "client",
+        roomId: chatRoomId,
+        message: refMessage.current.value,
+      })
+    );
+    refMessage.current.value = "";
   };
+  const startTypingHandler = () => {
+    onTypingHandler("START");
+  };
+  const stopTypingHandler = () => {
+    onTypingHandler("STOP");
+  };
+  // console.log("CHECK ROOM CHAT: ", chatRoom);
   return (
     <div className={classes["chat-window-container"]}>
       {/* Chat Header */}
@@ -24,42 +88,24 @@ const MessengerWindow = () => {
         <label>Let's Chat App</label>
       </div>
       {/* Chat content */}
-      <div className={classes["chat-content"]}>
-        <div className={classes["chat-customer-container"]}>
-          <label className={classes["chat-customer"]}>Xin chào</label>
-          <label className={classes["chat-customer"]}>
-            Làm thế nào để xem các sản phẩm
-          </label>
-        </div>
-        <div className={classes["chat-admin-container"]}>
-          <div className={classes["chat-line"]}>
-            <img
-              className={classes["admin-icon"]}
-              src={admin_icon}
-              alt="Admin icon"
-            />
-            <label className={classes["chat-admin"]}>ADMIN: xin chào bạn</label>
-          </div>
-          <div className={classes["chat-line"]}>
-            <img
-              className={classes["admin-icon"]}
-              src={admin_icon}
-              alt="Admin icon"
-            />
-            <label className={classes["chat-admin"]}>
-              ADMIN: Bạn có thể vào mục shop để xem các sản phẩm
-            </label>
-          </div>
-        </div>
+      <div className={classes["chat-content"]} ref={refChatContent}>
+        {conversationList}
       </div>
       {/* Chat footer */}
+      <div className={classes.typing}>{adminTyping}</div>
       <div className={classes["chat-footer"]}>
         <img
           className={classes["admin-icon"]}
           src={admin_icon}
           alt="Admin icon"
         />
-        <input type="text" placeholder="Enter Message!" ref={refMessage} />
+        <input
+          type="text"
+          placeholder="Enter Message!"
+          ref={refMessage}
+          onFocus={startTypingHandler}
+          onBlur={stopTypingHandler}
+        />
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path d="M396.2 83.8c-24.4-24.4-64-24.4-88.4 0l-184 184c-42.1 42.1-42.1 110.3 0 152.4s110.3 42.1 152.4 0l152-152c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-152 152c-64 64-167.6 64-231.6 0s-64-167.6 0-231.6l184-184c46.3-46.3 121.3-46.3 167.6 0s46.3 121.3 0 167.6l-176 176c-28.6 28.6-75 28.6-103.6 0s-28.6-75 0-103.6l144-144c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-144 144c-6.7 6.7-6.7 17.7 0 24.4s17.7 6.7 24.4 0l176-176c24.4-24.4 24.4-64 0-88.4z" />
         </svg>
