@@ -20,6 +20,12 @@ const chatReducer = (state = initialStateChat, action) => {
         member: state.member,
         conversation: [...state.conversation, action.payload],
       };
+    case "CLEAR_CHAT":
+      return {
+        chatRoomId: null,
+        conversation: null,
+        member: null,
+      };
     default:
       return state;
   }

@@ -10,12 +10,17 @@ import RegisterPage from "./components/pages/RegisterPage";
 import ShopPage from "./components/pages/ShopPage";
 import Order from "./components/pages/Order";
 import OrderDetail from "./components/pages/OrderDetail";
+import { useEffect } from "react";
 
 function App() {
+  // useEffect(() => {
+  //   return localStorage.clear();
+
+  // }, []);
   const { isLoggedIn } = useSelector((state) => state.logInReducer);
   return (
     <Routes>
-      <Route path="/*" element={<HomePage />} />
+      <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/checkout" element={isLoggedIn && <CheckoutPage />} />

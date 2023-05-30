@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MessengerWindow from "./messenger-window";
 import classes from "./messenger.module.css";
 import openSocket from "socket.io-client";
@@ -8,9 +8,12 @@ import { createChatRoomAPI } from "../lib/api-chat";
 const Messenger = () => {
   const [chatToggle, setChatToggle] = useState(false);
   const [socket, setSocket] = useState(null);
+  const refSocket = useRef();
+  refSocket.current = socket;
   const { chatRoomId } = useSelector((state) => state.chatReducer);
   const [adminTyping, setAdminTyping] = useState();
   const dispatch = useDispatch();
+
   // componentDidMout - connect to server, create room
   useEffect(() => {
     // open socket
@@ -18,7 +21,19 @@ const Messenger = () => {
     if (!chatRoomId) {
       dispatch(createChatRoomAPI());
     }
+    const cleanup = (e) => {
+      e.preventDefault();
+      dispatch({ type: "CLEAR_CHAT" });
+      // return (e.returnValue = "Close tab");
+    };
+    window.addEventListener("beforeunload", cleanup);
+    return () => {
+      window.removeEventListener("beforeunload", cleanup);
+      console.log("CHECK DISCONNECT: ", refSocket.current);
+      refSocket.current?.disconnect();
+    };
   }, []);
+
   // componentDidUpdate - listen channel after get chatRoomId
   useEffect(() => {
     // open channel with name is _id of chat room
@@ -31,14 +46,20 @@ const Messenger = () => {
           });
         }
         if (data.action === "START_TYPING") {
-          console.log("CHECK typing start: ", data);
+          // console.log("CHECK typing start: ", data);
           setAdminTyping("Admin is typing ...");
         } else {
-          console.log("CHECK typing stop: ", data);
+          // console.log("CHECK typing stop: ", data);
           setAdminTyping("");
         }
       });
     }
+    chatRoomId &&
+      socket?.emit("ONLINE_OFFLINE", {
+        action: "ONLINE",
+        roomId: chatRoomId,
+        userId: "client",
+      });
   }, [chatRoomId, socket]);
 
   const chatToggleHandler = () => {
@@ -53,7 +74,6 @@ const Messenger = () => {
         roomId: chatRoomId,
         userId: "client",
       });
-      console.log("start type");
       return;
     }
     if (status === "STOP") {
