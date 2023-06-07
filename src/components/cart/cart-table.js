@@ -17,7 +17,11 @@ const CartTable = (props) => {
     if (window.confirm(`Do you want to delete product '${product.name}'?`)) {
       dispatch({
         type: "DELETE_CART",
-        value: { id: product._id, total: quantity * product.price },
+        value: {
+          id: product._id,
+          total: quantity * product.price,
+          quantity: quantity,
+        },
       });
     }
   };

@@ -1,10 +1,11 @@
 const initialStateCart = {
   total: 0,
   listCart: [],
+  numberOfItem: 0,
 };
 
 const cartReducer = (state = initialStateCart, action) => {
-  const { total, listCart } = state;
+  const { total, listCart, numberOfItem } = state;
   // console.log("CHECK listCart in cartReducer: ", listCart);
   switch (action.type) {
     case "ADD_CART":
@@ -13,6 +14,7 @@ const cartReducer = (state = initialStateCart, action) => {
         return {
           listCart: [action.value],
           total: +action.value.product.price * action.value.quantity,
+          numberOfItem: +action.value.quantity,
         };
       }
       // Check isExist
@@ -36,6 +38,7 @@ const cartReducer = (state = initialStateCart, action) => {
         return {
           listCart: [...updatedProducts],
           total: total + +action.value.product.price * action.value.quantity,
+          numberOfItem: numberOfItem + +action.value.quantity,
         };
       }
       // add new item in cartList
@@ -43,6 +46,7 @@ const cartReducer = (state = initialStateCart, action) => {
         return {
           listCart: [...listCart, action.value],
           total: total + +action.value.product.price * action.value.quantity,
+          numberOfItem: numberOfItem + +action.value.quantity,
         };
       }
       break;
@@ -53,6 +57,7 @@ const cartReducer = (state = initialStateCart, action) => {
       return {
         listCart: [...listCartAfterDelete],
         total: total - +action.value.total,
+        numberOfItem: numberOfItem - +action.value.quantity,
       };
     case "INCREASE_QUANTITY":
       const incrementListCart = listCart.map((item) => {
@@ -64,6 +69,7 @@ const cartReducer = (state = initialStateCart, action) => {
       return {
         listCart: [...incrementListCart],
         total: total + +action.value.price,
+        numberOfItem: numberOfItem + 1,
       };
     case "DECREASE_QUANTITY":
       const decrementListCart = listCart.map((item) => {
@@ -75,6 +81,7 @@ const cartReducer = (state = initialStateCart, action) => {
       return {
         listCart: [...decrementListCart],
         total: total - +action.value.price,
+        numberOfItem: numberOfItem - 1,
       };
     case "CLEAR_CART":
       return {

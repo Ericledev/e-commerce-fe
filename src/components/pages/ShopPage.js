@@ -77,18 +77,19 @@ const ShopPage = () => {
           </div>
           {status === "pending" && <p>Loading...</p>}
           {status === "completed" && error && <p>{error}</p>}
-          {isDidMount && status === "completed" && data && data.length > 0 && (
+          {status === "completed" && data && data.length > 0 && (
             <ProductsListShop
-              products={data}
+              products={isDidMount ? data : filteredProducts}
               onShowDetail={showDetailHandler}
             />
           )}
-          {!isDidMount && status === "completed" && data && data.length > 0 && (
+
+          {/* {!isDidMount && status === "completed" && data && data.length > 0 && (
             <ProductsListShop
               products={filteredProducts}
               onShowDetail={showDetailHandler}
             />
-          )}
+          )} */}
           <Pagination
             productPage={data && isDidMount ? data : filteredProducts}
           />

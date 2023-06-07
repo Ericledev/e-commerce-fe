@@ -6,6 +6,9 @@ const Modal = forwardRef((props, ref) => {
   const [amiClose, setAmiClose] = useState(false);
   const navigation = useNavigate();
   const product = props.data;
+  const pathImage = product?.images[0].includes("/images/multiple_images")
+    ? process.env.REACT_APP_DOMAIN + product.images[0]
+    : product.images[0];
   // console.log("CHECK DATA: ", props.data);
 
   // parent component can call "closeModal()" in children component via ref
@@ -45,7 +48,7 @@ const Modal = forwardRef((props, ref) => {
     <div className={addClass} onClick={stopPropagationHandler}>
       {/* Image of product */}
       <div className={classes.image}>
-        <img src={product.images[0]} alt={product.name} />
+        <img src={pathImage} alt={product.name} />
       </div>
       {/* Content of product */}
       <div className={classes.content}>

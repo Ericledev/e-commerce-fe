@@ -46,6 +46,7 @@ ul li div {
 .nav-bar-right li {
   display: flex;
   flex-direction: row;
+  position: relative;
   /* gap: 5px; */
 }
 .active {

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import InputOrderedProducts from "../UI/InputOrderedProducts";
 import classes from "./product-detail.module.css";
 // import { saveToLocalStore } from "../../store/cart-reducer";
@@ -12,9 +12,7 @@ const ProductDetail = (props) => {
   const quantityRef = useRef();
 
   // using redux to add product to cart
-  const total = useSelector((state) => state.cartReducer.total);
   const dispatch = useDispatch();
-  console.log("CHECK REDUX TOTAL: ", total);
 
   // handle onClick small image
   const changeImageHandler = (e) => {
@@ -37,51 +35,35 @@ const ProductDetail = (props) => {
       type: "ADD_CART",
       value: { quantity: +quantityRef.current.dataset.value, product: product },
     });
-    alert(`The product is added to cart`);
-    // saveToLocalStore();
   };
+  // get path image
+  const pathImage = product?.images[img].includes("/images/multiple_images")
+    ? process.env.REACT_APP_DOMAIN + product.images[img]
+    : product.images[img];
+
+  const smallImg = product?.images.map((img, index) => {
+    const pathImage = img.includes("/images/multiple_images")
+      ? process.env.REACT_APP_DOMAIN + img
+      : img;
+    return (
+      <img
+        key={index}
+        src={pathImage}
+        onClick={changeImageHandler}
+        data-img={index}
+        alt={product.name}
+      />
+    );
+  });
   return (
     <>
       <div className={classes["detail-container"]}>
         {/* Image of product */}
         <div className={classes.image}>
           <div className={classes.large}>
-            <img
-              className={classes.img1}
-              src={product.images[img]}
-              alt={product.name}
-            />
+            <img className={classes.img1} src={pathImage} alt={product.name} />
           </div>
-          <div className={classes.small}>
-            <img
-              className={classes.img2}
-              src={product.images[0]}
-              onClick={changeImageHandler}
-              data-img="0"
-              alt={product.name}
-            />
-            <img
-              className={classes.img3}
-              src={product.images[1]}
-              onClick={changeImageHandler}
-              data-img="1"
-              alt={product.name}
-            />
-            <img
-              className={classes.img4}
-              src={product.images[2]}
-              onClick={changeImageHandler}
-              data-img="2"
-              alt={product.name}
-            />
-            <img
-              className={classes.img5}
-              src={product.images[3]}
-              onClick={changeImageHandler}
-              data-img="3"
-              alt={product.name}
-            />
-          </div>
+          <div className={classes.small}>{smallImg}</div>
         </div>
         {/* Content of product */}
         <div className={classes.content}>

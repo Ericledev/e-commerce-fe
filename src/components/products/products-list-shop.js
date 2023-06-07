@@ -8,12 +8,15 @@ const ProductsListShop = (props) => {
   };
 
   const item = products.map((item) => {
+    const pathImage = item?.images[0].includes("/images/multiple_images")
+      ? process.env.REACT_APP_DOMAIN + item.images[0]
+      : item.images[0];
     // format VND
     const price = new Intl.NumberFormat("vi").format(Number(item.price));
     return (
       <div className={classes.item} key={item._id}>
         <img
-          src={item.images[0]}
+          src={pathImage}
           alt={item.category}
           data-id={item._id}
           onClick={productDetailHandler}

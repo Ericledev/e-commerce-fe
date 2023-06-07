@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import NumberOfItemInCart from "../cart/number-item-in-cart";
 import classes from "./NavBar.module.css";
 
 const NavBar = () => {
@@ -107,6 +108,7 @@ const NavBar = () => {
           <div name="cart" onClick={onClickHandler}>
             Cart
           </div>
+          <NumberOfItemInCart />
         </li>
         {!isLoggedIn && (
           <li
